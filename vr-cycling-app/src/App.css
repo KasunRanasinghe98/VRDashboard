@@ -1,0 +1,408 @@
+/* Import Axiata Fonts */
+@font-face {
+  font-family: 'Axiata Book';
+  src: url('./fonts/Axiata Book.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Axiata Medium';
+  src: url('./fonts/Axiata Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Axiata Bold';
+  src: url('./fonts/Axiata Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+:root {
+  --bg-dark: #05020a;
+  --bg-deep-red: #22000a;
+  --accent-red: #C40D42;
+  --accent-orange: #F7941E;
+  --accent-neon: #FDB934;
+  --text-main: #ffffff;
+  --text-muted: #c6c6d0;
+  --card-bg: rgba(10, 5, 25, 0.85);
+  --hud-line: rgba(255, 255, 255, 0.08);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --shadow-soft: 0 26px 60px rgba(0, 0, 0, 0.65);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Axiata Book', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top left, #C40D42 0%, #7B1B67 38%, #05020a 78%);
+  color: var(--text-main);
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Background HUD grid / glow */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.12) 0, transparent 55%),
+    radial-gradient(circle at 80% 80%, rgba(196, 13, 66, 0.18) 0, transparent 60%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    60px 60px,
+    60px 60px;
+  mix-blend-mode: screen;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.App {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  height: 100vh;
+  width: 100%;
+  padding: 32px 42px;
+}
+
+/* Top strip text */
+.top-strip {
+  position: absolute;
+  top: 18px;
+  left: 42px;
+  right: 42px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Axiata Medium', system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  color: #f5f5f5;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.top-strip .brand-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-neon);
+  box-shadow: 0 0 10px var(--accent-neon);
+  margin-right: 8px;
+}
+
+.top-strip span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.poster-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 520px) minmax(420px, 1fr);
+  gap: 32px;
+  margin-top: 32px;
+  width: 100%;
+}
+
+/* LEFT: Content card */
+.left-panel {
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+  padding: 32px 30px 26px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(18px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+.eyebrow {
+  font-family: 'Axiata Medium', system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 11px;
+  color: var(--accent-neon);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 36px;
+  height: 1px;
+  background: linear-gradient(to right, var(--accent-neon), transparent);
+}
+
+.title-main {
+  font-family: 'Axiata Bold', sans-serif;
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+
+.title-sub {
+  font-family: 'Axiata Bold', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #ffe7ec;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+  margin-top: 18px;
+}
+
+.chip {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 7px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), rgba(5, 2, 10, 0.6));
+  backdrop-filter: blur(12px);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-orange);
+  box-shadow: 0 0 10px var(--accent-orange);
+}
+
+.bottom-logos {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo-tile {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  flex: 1;
+}
+
+.logo-tile img {
+  max-height: 35px;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* RIGHT: Map frame */
+.right-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.map-frame-wrapper {
+  position: relative;
+  flex: 1;
+  border-radius: var(--radius-xl);
+  padding: 2px;
+  background: conic-gradient(from 210deg, #C40D42, #F7941E, #FDB934, #C40D42);
+  box-shadow:
+    0 0 35px rgba(196, 13, 66, 0.55),
+    0 0 80px rgba(0, 0, 0, 0.75);
+}
+
+.map-frame-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(var(--radius-xl) - 4px);
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.12), rgba(5, 2, 10, 0.98));
+  overflow: hidden;
+}
+
+.hud-corner {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  z-index: 10;
+}
+
+.hud-corner.tl {
+  top: 14px;
+  left: 18px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.hud-corner.tr {
+  top: 14px;
+  right: 18px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.hud-corner.bl {
+  bottom: 14px;
+  left: 18px;
+  border-right: none;
+  border-top: none;
+}
+
+.hud-corner.br {
+  bottom: 14px;
+  right: 18px;
+  border-left: none;
+  border-top: none;
+}
+
+.badge-live {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(196, 13, 66, 0.9);
+  font-family: 'Axiata Medium', system-ui, sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 1000;
+}
+
+.badge-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 14px #ffffff;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Legend styling similar to Nayans */
+.map-legend {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-soft);
+}
+
+.legend-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), rgba(5, 2, 10, 0.4));
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legend-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px currentColor;
+}
+
+.legend-info {
+  flex: 1;
+}
+
+.legend-name {
+  font-family: 'Axiata Bold', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.legend-state {
+  font-family: 'Axiata Book', sans-serif;
+  font-size: 11px;
+  color: var(--accent-neon);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 960px) {
+  .poster-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .App {
+    padding: 80px 18px 22px;
+  }
+
+  .left-panel {
+    max-height: none;
+  }
+
+  .top-strip {
+    left: 18px;
+  }
+}

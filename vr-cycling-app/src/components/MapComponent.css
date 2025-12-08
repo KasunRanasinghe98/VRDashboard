@@ -1,0 +1,117 @@
+/* Map fills the HUD frame */
+.map-wrapper {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.map-wrapper .leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: transparent;
+}
+
+/* Reduce map tile opacity for better path visibility */
+.map-wrapper .leaflet-tile-pane {
+  opacity: 0.6;
+}
+
+/* Keep path and markers at full opacity */
+.map-wrapper .leaflet-overlay-pane {
+  opacity: 1;
+}
+
+/* HUD-style Popup */
+.popup-content {
+  font-family: 'Axiata Book', sans-serif;
+  padding: 10px;
+}
+
+.popup-content strong {
+  font-family: 'Axiata Bold', sans-serif;
+  color: #C40D42;
+  font-size: 1.2rem;
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 15px;
+  box-shadow: 0 6px 25px rgba(196, 13, 66, 0.3);
+  border: 2px solid #FDB934;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  border-left: 2px solid #FDB934;
+  border-bottom: 2px solid #FDB934;
+}
+
+/* Smooth transitions for markers */
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  transition: all 0.5s ease-in-out;
+}
+
+/* HUD-style Zoom Controls */
+.leaflet-control-zoom {
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(196, 13, 66, 0.4) !important;
+  border: none !important;
+}
+
+.leaflet-control-zoom a {
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  font-size: 22px !important;
+  color: #C40D42 !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(186, 202, 211, 0.8) 100%) !important;
+  border: none !important;
+  transition: all 0.3s ease !important;
+  font-family: 'Axiata Bold', sans-serif !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: linear-gradient(135deg, #FDB934 0%, #F7941E 100%) !important;
+  color: white !important;
+  transform: scale(1.1);
+}
+
+.leaflet-control-zoom a:first-child {
+  border-bottom: 2px solid #C40D42 !important;
+}
+
+/* Pulsing path animation */
+@keyframes pathPulse {
+  0%, 100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.map-wrapper .leaflet-overlay-pane path {
+  animation: pathPulse 3s ease-in-out infinite;
+}
+
+/* Hide Leaflet attribution in HUD mode */
+.leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.5) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 9px !important;
+  padding: 2px 6px !important;
+  border-radius: 6px !important;
+}
+
+.leaflet-control-attribution a {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
