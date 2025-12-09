@@ -78,23 +78,9 @@ function App() {
                   இடைவெளியை திறம்பட இணைக்கிறது</font>
             </p>
 
-            <div className="chips-row">
-              <div className="chip">
-                <span className="chip-dot"></span>
-                Live via 5G
-              </div>
-              <div className="chip">
-                <span className="chip-dot"></span>
-                Sri Lankan Routes
-              </div>
-              <div className="chip">
-                <span className="chip-dot"></span>
-                Immersive
-              </div>
-            </div>
           </div>
 
-          {/* Rider Status Cards */}
+          {/* Rider Status Cards - Single Row */}
           <div className="ready-indicator">
             <div className="ready-label">Location Rider Status</div>
             <div className="ready-pills">
@@ -151,27 +137,33 @@ function App() {
             </div>
           </div>
 
-          {/* Legend with State Information */}
+          {/* Legend - Simplified */}
           <div className="map-legend">
             <div className="legend-items">
               <div className="legend-item">
                 <div className="legend-color" style={{ color: '#2ecc71' }}></div>
-                <div className="legend-info">
-                  <span className="legend-name">Colombo</span>
-                  <span className="legend-state">
-                    {devices ? devices.deviceH.state : 'Loading...'}
-                  </span>
-                </div>
+                <span className="legend-name">Colombo</span>
               </div>
               <div className="legend-item">
                 <div className="legend-color" style={{ color: '#e74c3c' }}></div>
-                <div className="legend-info">
-                  <span className="legend-name">Kandy</span>
-                  <span className="legend-state">
-                    {devices ? devices.deviceG.state : 'Loading...'}
-                  </span>
-                </div>
+                <span className="legend-name">Kandy</span>
               </div>
+            </div>
+          </div>
+
+          {/* Feature Chips */}
+          <div className="chips-row">
+            <div className="chip">
+              <span className="chip-dot"></span>
+              Live via 5G
+            </div>
+            <div className="chip">
+              <span className="chip-dot"></span>
+              Sri Lankan Routes
+            </div>
+            <div className="chip">
+              <span className="chip-dot"></span>
+              Immersive
             </div>
           </div>
         </section>
