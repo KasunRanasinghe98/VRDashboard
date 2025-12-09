@@ -142,7 +142,7 @@ body::before {
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 11px;
-  color: var(--accent-neon);
+  color: #c0ff00;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -211,12 +211,125 @@ body::before {
   box-shadow: 0 0 10px var(--accent-orange);
 }
 
+/* Rider Status Indicator */
+.ready-indicator {
+  margin-top: 10px;
+  margin-bottom: 18px;
+}
+
+.ready-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: rgba(198, 198, 208, 0.95);
+  opacity: 0.95;
+  margin-bottom: 8px;
+}
+
+.ready-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.ready-pill {
+  position: relative;
+  padding: 14px 22px 14px 26px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.12), rgba(5, 2, 10, 0.82));
+  backdrop-filter: blur(10px);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: default;
+  transition: all 0.22s ease;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+}
+
+.ready-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 0 0 rgba(192, 255, 0, 0);
+  transition: all 0.25s ease;
+}
+
+/* Ready state - Yellow glow */
+.ready-pill.state-ready {
+  border-color: rgba(255, 215, 0, 0.9);
+  color: #ffffff;
+  box-shadow:
+    0 0 18px rgba(255, 215, 0, 0.5),
+    0 0 34px rgba(255, 215, 0, 0.35);
+  background: radial-gradient(circle at top left, rgba(255, 215, 0, 0.32), rgba(5, 2, 10, 0.92));
+}
+
+.ready-pill.state-ready .ready-dot {
+  background: #ffd700;
+  box-shadow:
+    0 0 14px #ffd700,
+    0 0 24px rgba(255, 215, 0, 0.7);
+}
+
+/* InGame state - Green glow (low intensity) */
+.ready-pill.state-ingame {
+  border-color: rgba(46, 204, 113, 0.7);
+  color: #ffffff;
+  box-shadow:
+    0 0 12px rgba(46, 204, 113, 0.3),
+    0 0 24px rgba(46, 204, 113, 0.2);
+  background: radial-gradient(circle at top left, rgba(46, 204, 113, 0.22), rgba(5, 2, 10, 0.92));
+}
+
+.ready-pill.state-ingame .ready-dot {
+  background: #2ecc71;
+  box-shadow:
+    0 0 10px rgba(46, 204, 113, 0.6),
+    0 0 18px rgba(46, 204, 113, 0.4);
+}
+
+/* Finished state - White glow */
+.ready-pill.state-finished {
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
+  box-shadow:
+    0 0 18px rgba(255, 255, 255, 0.5),
+    0 0 34px rgba(255, 255, 255, 0.35);
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.32), rgba(5, 2, 10, 0.92));
+}
+
+.ready-pill.state-finished .ready-dot {
+  background: #ffffff;
+  box-shadow:
+    0 0 14px #ffffff,
+    0 0 24px rgba(255, 255, 255, 0.7);
+}
+
+.bottom-illustration-wrapper {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bottom-illustration {
+  max-height: 152px;
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
 .bottom-logos {
   display: flex;
   gap: 10px;
-  margin-top: auto;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 10px;
 }
 
 .logo-tile {

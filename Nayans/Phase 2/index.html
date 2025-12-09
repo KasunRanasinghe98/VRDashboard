@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>VR 5G Cycling – Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Rajdhani:wght@500;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #05020a;
+      --bg-deep-red: #22000a;
+      --accent-red: #ff1744;
+      --accent-orange: #ff9100;
+      --accent-neon: #c0ff00;
+      --text-main: #ffffff;
+      --text-muted: #c6c6d0;
+      --card-bg: rgba(10, 5, 25, 0.85);
+      --hud-line: rgba(255, 255, 255, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --shadow-soft: 0 26px 60px rgba(0, 0, 0, 0.65);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #ff5252 0%, #3b0a2a 38%, #05020a 78%);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Background HUD grid / glow */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.12) 0, transparent 55%),
+        radial-gradient(circle at 80% 80%, rgba(255, 23, 68, 0.18) 0, transparent 60%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size:
+        100% 100%,
+        100% 100%,
+        60px 60px,
+        60px 60px;
+      mix-blend-mode: screen;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .poster-shell {
+      position: relative;
+      display: flex;
+      flex-direction: row;
+      gap: 32px;
+      height: 100vh;
+      width: 100%;
+      padding: 32px 42px;
+    }
+
+    /* Top strip text */
+    .top-strip {
+      position: absolute;
+      top: 18px;
+      left: 42px;
+      right: 42px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: "Rajdhani", system-ui, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 11px;
+      color: #f5f5f5;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .top-strip .brand-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-neon);
+      box-shadow: 0 0 10px var(--accent-neon);
+      margin-right: 8px;
+    }
+
+    .top-strip span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* NEW: top-right logo strip */
+    .top-logos {
+      position: absolute;
+      top: 54px;
+      /* below the top strip */
+      right: 42px;
+      display: flex;
+      gap: 10px;
+      z-index: 2;
+    }
+
+    .top-logo-tile {
+      background: #ffffff;
+      /* white background */
+      border-radius: 12px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    .top-logo-tile--dark {
+      background: #ffffff;
+      /* optional dark version */
+    }
+
+    .top-logo-tile img {
+      max-height: 30px;
+      max-width: 90px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .poster-grid {
+      display: grid;
+      grid-template-columns: minmax(320px, 520px) minmax(420px, 1fr);
+      gap: 32px;
+      margin-top: 32px;
+      width: 100%;
+    }
+
+    /* LEFT: Content card */
+    .left-panel {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 32px 30px 26px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(18px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      max-height: calc(100vh - 80px);
+    }
+
+    .eyebrow {
+      font-family: "Rajdhani", system-ui, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 11px;
+      color: var(--accent-neon);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 1px;
+      background: linear-gradient(to right, var(--accent-neon), transparent);
+    }
+
+    .title-main {
+      font-weight: 800;
+      font-size: 32px;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .title-sub {
+      font-weight: 600;
+      font-size: 22px;
+      color: #ffe7ec;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 420px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+
+
+    .chip {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), rgba(5, 2, 10, 0.6));
+      backdrop-filter: blur(12px);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-orange);
+      box-shadow: 0 0 10px var(--accent-orange);
+    }
+
+    .hud-divider {
+      margin: 14px 0 18px;
+      height: 1px;
+      width: 100%;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.18), transparent 70%);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .info-item {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .info-label {
+      opacity: 0.6;
+    }
+
+    .info-value {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .info-value span {
+      font-family: "Rajdhani", system-ui, sans-serif;
+      font-size: 16px;
+      letter-spacing: 0.16em;
+    }
+
+    .bottom-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 16px;
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .bottom-illustration {
+      max-height: 152px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    /* RIGHT: App frame */
+    .right-panel {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .app-frame-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 720px;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius-xl);
+      padding: 2px;
+      background: conic-gradient(from 210deg, #ff1744, #ff9100, #c0ff00, #ff1744);
+      box-shadow:
+        0 0 35px rgba(255, 23, 68, 0.55),
+        0 0 80px rgba(0, 0, 0, 0.75);
+    }
+
+    .app-frame-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: calc(var(--radius-xl) - 4px);
+      background: radial-gradient(circle at top, rgba(255, 255, 255, 0.12), rgba(5, 2, 10, 0.98));
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hud-corner {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .hud-corner.tl {
+      top: 14px;
+      left: 18px;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .hud-corner.tr {
+      top: 14px;
+      right: 18px;
+      border-left: none;
+      border-bottom: none;
+    }
+
+    .hud-corner.bl {
+      bottom: 14px;
+      left: 18px;
+      border-right: none;
+      border-top: none;
+    }
+
+    .hud-corner.br {
+      bottom: 14px;
+      right: 18px;
+      border-left: none;
+      border-top: none;
+    }
+
+    .app-placeholder {
+      text-align: center;
+      max-width: 80%;
+    }
+
+    .app-placeholder-title {
+      font-family: "Rajdhani", system-ui, sans-serif;
+      font-size: 18px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .app-placeholder-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+    }
+
+    .ghost-button {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: transparent;
+      padding: 8px 18px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #ffffff;
+      cursor: default;
+    }
+
+    .badge-live {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(255, 23, 68, 0.9);
+      font-family: "Rajdhani", system-ui, sans-serif;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 14px #ffffff;
+    }
+
+    /* Rider ready indicator */
+    .ready-indicator {
+      margin-top: 10px;
+      margin-bottom: 18px;
+    }
+
+    .ready-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: rgba(198, 198, 208, 0.95);
+      opacity: 0.95;
+      margin-bottom: 8px;
+    }
+
+    /* Container */
+    .ready-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    /* Bigger, chunkier pill modules */
+    .ready-pill {
+      position: relative;
+      padding: 14px 22px 14px 26px;
+      border-radius: 16px;
+      /* 🚀 squared-circle style */
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: radial-gradient(circle at top left,
+          rgba(255, 255, 255, 0.12),
+          rgba(5, 2, 10, 0.82));
+      backdrop-filter: blur(10px);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: default;
+      transition: all 0.22s ease;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Larger status dot */
+    .ready-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 6px;
+      /* 💠 more squared-circle */
+      background: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 0 0 0 rgba(192, 255, 0, 0);
+      transition: all 0.25s ease;
+    }
+
+    /* Active illuminated state */
+    .ready-pill.is-active {
+      border-color: rgba(192, 255, 0, 0.9);
+      color: #ffffff;
+      box-shadow:
+        0 0 18px rgba(192, 255, 0, 0.5),
+        0 0 34px rgba(192, 255, 0, 0.35);
+      background: radial-gradient(circle at top left,
+          rgba(192, 255, 0, 0.32),
+          rgba(5, 2, 10, 0.92));
+    }
+
+    .ready-pill.is-active .ready-dot {
+      background: var(--accent-neon);
+      box-shadow:
+        0 0 14px var(--accent-neon),
+        0 0 24px rgba(192, 255, 0, 0.7);
+    }
+
+
+    /* Small screens: keep poster vibe but stack */
+    @media (max-width: 960px) {
+      .poster-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .poster-shell {
+        padding: 80px 18px 22px;
+      }
+
+      .left-panel {
+        max-height: none;
+      }
+
+      .top-strip {
+        left: 18px;
+        right: 18px;
+      }
+
+      .top-logos {
+        right: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="poster-shell">
+
+    <div class="top-strip">
+      <span><span class="brand-dot"></span>Virtual Reality • 5G • Immersive Racing</span>
+      <span>Colombo &nbsp;⟷&nbsp; Kandy Route</span>
+    </div>
+
+    <!-- NEW: top-right logos -->
+    <div class="top-logos">
+      <!-- change src paths to your own logo files -->
+      <div class="top-logo-tile">
+        <img src="logos/dialog.png" alt="Dialog">
+      </div>
+      <div class="top-logo-tile">
+        <img src="logos/entc.png" alt="ENTC">
+      </div>
+      <div class="top-logo-tile top-logo-tile--dark">
+        <img src="logos/partner.png" alt="Partner">
+      </div>
+    </div>
+
+    <div class="poster-grid">
+      <!-- LEFT: Poster content -->
+      <section class="left-panel">
+        <div>
+          <div class="eyebrow">Dialog 5G Experience</div>
+          <h1 class="title-main">Virtual Reality Cycling Race Experience </h1>
+          <h2 class="title-sub">Colombo vs Kandy</h2>
+
+          <p class="subtitle">
+            Ride the future with VR 5G Cycling. Feel the thrill of real-world riding
+            inside 360° environments, while your race is powered end-to-end by Dialog 5G.
+          </p>
+
+          <p class="subtitle">
+            VR 5G Cycling සමඟ අනාගතය සවිකර ධාවනය කරන්න. අවට 360° ආශ්වාදජනක
+            පරිසරයන් තුළ සැබෑ රියදුරාගේ රිද්මය අත්විඳිමින්, නිරවුල් 5G ජාලය ඔස්සේ මෙම
+            අත්දැකීම ජීවනයට පත් කරයි.
+          </p>
+
+          <p class="subtitle">
+            VR 5G Cycling உடன் எதிர்காலத்தை ஓட்டுங்கள். முழுமையான 360° மூழ்கும்
+            சூழலில் உண்மையான சவாரியின் சுகத்தை அனுபவிக்கவும்; இந்த
+            அனுபவத்தை தடையற்ற 5G பிணையம் உயிர்ப்பிக்கிறது.
+          </p>
+
+          <div class="chips-row">
+            <div class="chip">
+              <span class="chip-dot"></span>
+              Live via 5G
+            </div>
+            <div class="chip">
+              <span class="chip-dot"></span>
+              Sri Lankan Routes
+            </div>
+            <div class="chip">
+              <span class="chip-dot"></span>
+              Immersive
+            </div>
+          </div>
+        </div>
+
+        <div class="ready-indicator">
+          <div class="ready-label">Location Rider Status</div>
+          <div class="ready-pills">
+            <button id="colombo-pill" class="ready-pill is-active">
+              <span class="ready-dot"></span>
+              Colombo Ready
+            </button>
+            <button id="kandy-pill" class="ready-pill">
+              <span class="ready-dot"></span>
+              Kandy Ready
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom illustration only -->
+        <div class="bottom-row">
+          <img src="logos/vr-cycling-illustration.png" alt="VR 5G Cycling illustration" class="bottom-illustration">
+        </div>
+      </section>
+
+      <!-- RIGHT: App display frame -->
+      <section class="right-panel">
+        <div class="app-frame-wrapper">
+          <div class="app-frame-inner">
+            <!-- HUD corners -->
+            <div class="hud-corner tl"></div>
+            <div class="hud-corner tr"></div>
+            <div class="hud-corner bl"></div>
+            <div class="hud-corner br"></div>
+
+            <div class="badge-live">
+              <span class="badge-live-dot"></span>
+              LIVE DEMO • 5G LINK
+            </div>
+
+            <!-- Replace this placeholder with your app view -->
+            <div class="app-placeholder">
+              <div class="app-placeholder-title">VR 5G Cycling</div>
+              <p class="app-placeholder-sub">
+                This area is reserved for your live cycling app.
+                Embed your game canvas, WebGL scene, or video feed here.
+              </p>
+              <button class="ghost-button">
+                App View Placeholder
+              </button>
+            </div>
+         </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+</body>
+
+</html>

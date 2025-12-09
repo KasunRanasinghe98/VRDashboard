@@ -9,6 +9,16 @@ function App() {
   // Use environment variable or fallback to current hostname
   const API_URL = process.env.REACT_APP_API_URL || `${window.location.protocol}//${window.location.hostname}:5000`;
 
+  // Helper function to determine state class for glowing effect
+  const getStateClass = (state) => {
+    if (!state) return '';
+    const stateLower = state.toLowerCase();
+    if (stateLower.includes('ready')) return 'state-ready';
+    if (stateLower.includes('ingame') || stateLower.includes('racing') || stateLower.includes('playing')) return 'state-ingame';
+    if (stateLower.includes('finished') || stateLower.includes('complete')) return 'state-finished';
+    return '';
+  };
+
   useEffect(() => {
     // Fetch path data once on mount
     fetch(`${API_URL}/api/path`)
@@ -84,16 +94,39 @@ function App() {
             </div>
           </div>
 
-          {/* Bottom Logos */}
-          <div className="bottom-logos">
-            <div className="logo-tile">
-              <img src="/logos/dialog.png" alt="Dialog" onError={(e) => e.target.style.display = 'none'} />
+          {/* Rider Status Cards */}
+          <div className="ready-indicator">
+            <div className="ready-label">Location Rider Status</div>
+            <div className="ready-pills">
+              <div className={`ready-pill ${getStateClass(devices?.deviceH.state)}`}>
+                <span className="ready-dot"></span>
+                Colombo {devices?.deviceH.state || 'Loading...'}
+              </div>
+              <div className={`ready-pill ${getStateClass(devices?.deviceG.state)}`}>
+                <span className="ready-dot"></span>
+                Kandy {devices?.deviceG.state || 'Loading...'}
+              </div>
             </div>
-            <div className="logo-tile">
-              <img src="/logos/entc.png" alt="ENTC" onError={(e) => e.target.style.display = 'none'} />
-            </div>
-            <div className="logo-tile">
-              <img src="/logos/partner.png" alt="Partner" onError={(e) => e.target.style.display = 'none'} />
+          </div>
+
+          {/* Bottom Illustration and Logos */}
+          <div className="bottom-illustration-wrapper">
+            <img 
+              src="/logos/steps.png" 
+              alt="VR Cycling Steps" 
+              className="bottom-illustration"
+              onError={(e) => e.target.style.display = 'none'}
+            />
+            <div className="bottom-logos">
+              <div className="logo-tile">
+                <img src="/logos/dialog.png" alt="Dialog" onError={(e) => e.target.style.display = 'none'} />
+              </div>
+              <div className="logo-tile">
+                <img src="/logos/entc.png" alt="ENTC" onError={(e) => e.target.style.display = 'none'} />
+              </div>
+              <div className="logo-tile">
+                <img src="/logos/partner.png" alt="Partner" onError={(e) => e.target.style.display = 'none'} />
+              </div>
             </div>
           </div>
         </section>
